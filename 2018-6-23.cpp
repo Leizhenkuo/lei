@@ -134,40 +134,79 @@ void list()//浏览职工工资数据函数
 	}
 	fclose(fp);
 }
-void modify(List *q)//修改职工工资数据函数
+void modify()//修改职工工资数据函数
 {
-	/*
-	List woker[n];
-	for(int i=0;i<n;i++)
+	cout<<"查询文件中!"<<endl;
+	List woker[100],*q;
+	FILE *fp;
+	q=woker;
+	char ch;
+	int i;
+	int k;
+	char number[9];
+	cout<<"输入你要修改的数据的工号"<<endl;
+	cin>>number;
+	if((fp=fopen("gx.dat","rb"))==NULL)
 	{
-		cout<<"读取文件中!"<<endl;
-		List worker,*q;
-		FILE *fp;
-		char ch;
-		int i;
-		q=&worker;
-		if((fp=fopen("gx.dat","rb"))==NULL)
-		{
-			cout<<"Can't open this file!";
-			getch();
-			exit(-1);
-		}
-		cout<<"工号"<<" "<<"名字"<<" "<<"岗位工资"<<" "<<"薪级工资"<<" "<<"职务津贴"<<" "<<"效绩工资"<<" "<<"应发工资"<<" "<<"个人所得税"<<" "<<"实发工资"<<endl;
-		for(i=0;i<5000;i++)
-		{
-			fseek(fp,i*sizeof(struct List),0);
-			fread(q,sizeof(struct List),1,fp);
-			cout<<q->gonghao<<"     "<<q->name<<"     "<<q->gwgz<<"     "<<q->xjgz<<"     "<<q->zwjt<<"     "<<q->jxgz<<"     "<<q->yfgz<<"     "<<q->grsds<<"     "<<q->sfgz<<endl;
-			ch=fgetc(fp);
-			if(ch==EOF)
-			{
-				printf("当前列为空结束当前读取\n");
-				break;
-			}
-		}
-		fclose(fp);
+		cout<<"Can't open this file!";
+		getch();
+		exit(-1);
 	}
-	*/
+	cout<<"工号"<<" "<<"名字"<<" "<<"岗位工资"<<" "<<"薪级工资"<<" "<<"职务津贴"<<" "<<"效绩工资"<<" "<<"应发工资"<<" "<<"个人所得税"<<" "<<"实发工资"<<endl;
+	for(i=0;i<5000;i++)
+	{
+		fseek(fp,i*sizeof(struct List),0);
+		fread(q,sizeof(struct List),1,fp);
+		if(strcmp(q->gonghao,number)==0)
+		{
+			cout<<q->gonghao<<"     "<<q->name<<"     "<<q->gwgz<<"     "<<q->xjgz<<"     "<<q->zwjt<<"     "<<q->jxgz<<"     "<<q->yfgz<<"     "<<q->grsds<<"     "<<q->sfgz<<endl;
+			strcpy(q->gonghao,woker[i].gonghao);
+			k=i;
+			/*strcpy(q->name,woker[i].name);	
+			woker[i].gwgz=q->gwgz;
+			woker[i].xjgz=q->xjgz;
+			woker[i].zwjt=q->zwjt;
+			woker[i].jxgz=q->jxgz;
+			woker[i].yfgz=q->yfgz;
+			double p=woker[i].yfgz;
+			woker[i].grsds=grsds(p);
+			woker[i].sfgz=woker[i].yfgz-woker[i].grsds;*/
+		}	
+		ch=fgetc(fp);
+		if(ch==EOF)
+		{
+			printf("已经到文件末尾...\n");
+			break;
+		}
+	}
+	fclose(fp);
+	cout<<"修改中......!!请输入修改信息."<<endl;
+	cout<<"工号"<<" "<<"名字"<<" "<<"岗位工资"<<" "<<"薪级工资"<<" "<<"职务津贴"<<" "<<"效绩工资"<<" "<<"应发工资"<<endl;
+	cin>>woker[k].gonghao>>woker[k].name>>woker[k].gwgz>>woker[k].xjgz>>woker[k].zwjt>>woker[k].jxgz>>woker[k].yfgz;
+	woker[k].grsds=grsds(woker[k].yfgz);
+	woker[k].sfgz=woker[k].yfgz-woker[k].grsds;
+	q=woker;
+	if(woker[k].gwgz<0||woker[k].gwgz>50000)
+	{	
+		cout<<"你还没有输入任何数据!!\n请输入有效的数据!"<<endl;
+	}
+	else
+	{
+		cout<<woker[k].gonghao<<"     "<<woker[k].name<<"     "<<woker[k].gwgz<<"     "<<woker[k].xjgz<<"     "<<woker[k].zwjt<<"     "<<woker[k].jxgz<<"     "<<woker[k].yfgz<<"     "<<woker[k].grsds<<"     "<<woker[k].sfgz<<endl;	
+		cout<<"保存中......!!"<<endl;
+		for(int j=0;j<i;j++)
+		{		
+			fstream f1("gx.dat",ios::out|ios::binary);
+			fseek(fp,j*sizeof(struct List),0);
+			if(!f1)
+			{
+				cout<<"open gx.dat error!"<<endl;
+			    abort();
+			}
+		    f1.write((char*)q,sizeof(List));
+			f1.close();
+		}		
+	}
 }
 void del()//删除职工工资数据函数
 {
@@ -259,7 +298,7 @@ int main()//主函数
 			break;
 		case 4: list();
 			break;
-		case 5: modify(&woker);
+		case 5: modify();
 			break;	   	  
 	    case 6: del();
 			break;		   	  	  
