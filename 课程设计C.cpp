@@ -10,8 +10,14 @@
  *        Version:  0.0.1(2018年06月28日)
  *         Author:  LeiZhenkuo <appler1998@qq.com>
  *      ChangeLog:  1, Release initial version on "2018年06月28日 16时49分00秒"
- *  Function List:  
- *                  
+ *  Function List:  read(): 读取文件
+ *                  write(): 写入文件
+ *                  find(): 查询数据
+ *                  list(): 浏览数据
+ *                  modify(): 修改数据
+ *                  del(): 删除数据
+ *                  add(): 增加数据
+ *                  grsds(double yfgz): 计算个人所得税
  *****************************************************************************/
 #include<stdio.h>
 #include<conio.h>
@@ -73,7 +79,9 @@ void read()
 	}
 	n=i;
 	fclose(fp);	//关闭流
-	printf("程序正常运行中!!请选择操作1~8!\n");
+	printf("程序正常运行中!!");
+	system("pause");
+	system("cls");
 }
 //-------------------------------------------------------------------------
 /*保存职工工资数据函数*/
@@ -90,11 +98,15 @@ void write()
 		fwrite(&woker[i],sizeof(List),1,fp);//写到用户空间缓冲区
 	fclose(fp);
 	printf("已保存......");//保存文件
+	system("pause");
+	system("cls");
 }
 //-------------------------------------------------------------------------
 /*查询职工工资数据函数*/
 void find()
 {
+	char num[10];
+	gets(num);
 	char number[9];
 	printf("输入你要查询职工数据的工号!\n");
 	scanf("%s",&number);
@@ -120,6 +132,8 @@ void find()
 			printf("未查询到你输入工号的数据!\n");
 		}
 	}
+	system("pause");
+	system("cls");
 }
 //------------------------------------------------------------------------
 /*浏览职工工资数据函数*/
@@ -140,11 +154,15 @@ void list()
 		printf("%.0f   ",woker[i].sfgz);
 		printf("\n");
 	}
+	system("pause");
+	system("cls");
 }
 //------------------------------------------------------------------------
 /*修改职工工资数据函数*/
 void modify()
 {
+	char num[10];
+	gets(num);
 	char number[9];
 	printf("输入你要修改职工数据的工号!\n");
 	scanf("%s",&number);
@@ -153,24 +171,29 @@ void modify()
 		if(strcmp(number,woker[i].gonghao)==0)//循环对比找到对应数据
 		{
 			printf("你正在修改工号%s的数据",woker[i].gonghao);
-			printf("输入你要修改的具体数据!\n");
+			printf("输入你要修改的具体数据!(格式请按,例1001 张三 1000 1000 200 300 2500输入)\n");
 			printf("名字 岗位工资 薪级工资 职务津贴 效绩工资 应发工资\n");
 			scanf("%s%f%f%f%f%f",&woker[i].name,&woker[i].gwgz,&woker[i].xjgz,&woker[i].zwjt,&woker[i].jxgz,&woker[i].yfgz);
 			double p=woker[i].yfgz;
 			woker[i].grsds=grsds(p);
 			woker[i].sfgz=woker[i].yfgz-woker[i].grsds;
 			printf("输入完成!\n");
+			break;
 		}
 		else if(i==n)
 		{
 			printf("未查询到你输入工号的数据!检查工号后...重新修改....\n");
 		}
 	}
+	system("pause");
+	system("cls");
 }
 //----------------------------------------------------------------------
 /*删除职工工资数据函数*/
 void del()
 {
+	char num[10];
+	gets(num);
 	char number[9];
 	printf("输入你要删除职工数据的工号!\n");
 	scanf("%s",&number);
@@ -178,7 +201,7 @@ void del()
 	{
 		if(strcmp(number,woker[i].gonghao) == 0)
 		{
-			for(int j=0;j<=n;j++)
+			for(int j=i;j<=n;j++)
 			{
 				woker[j]=woker[j+1];
 			}
@@ -192,12 +215,16 @@ void del()
 	{
 		printf("请检查工号是否存在!");
 	}
+	system("pause");
+	system("cls");
 }
 //----------------------------------------------------------------------
 /*添加职工工资数据函数*/
 void add()
 {
-	printf("输入增加的信息！！\n");
+	char num[10];
+	gets(num);
+	printf("输入增加的信息！！(格式请按,例1001 张三 1000 1000 200 300 2500输入)\n");
 	printf("工号 名字 岗位工资 薪级工资 职务津贴 效绩工资 应发工资\n");
 	scanf("%s%s%f%f%f%f%f",&woker[n+1].gonghao,&woker[n+1].name,&woker[n+1].gwgz,&woker[n+1].xjgz,&woker[n+1].zwjt,&woker[n+1].jxgz,&woker[n+1].yfgz);
 	printf("查询文件中!\n");
@@ -209,13 +236,14 @@ void add()
 			scanf("%s%s%f%f%f%f%f",&woker[n+1].gonghao,&woker[n+1].name,&woker[n+1].gwgz,&woker[n+1].xjgz,&woker[n+1].zwjt,&woker[n+1].jxgz,&woker[n+1].yfgz);
 			i=0;//重新回到零位判断
 		}
-		continue;
 	}
 	double p=woker[i].yfgz;
 	woker[i].grsds=grsds(p);//调用grsds()计算个人所得税
 	woker[i].sfgz=woker[i].yfgz-woker[i].grsds;//计算实发工资
 	n=n+1;
 	printf("输入结束!!\n");
+	system("pause");
+	system("cls");
 }
 //---------------------------------------------------------------------
 /*计算个人所得税*/
@@ -247,13 +275,14 @@ double grsds(double yfgz)
 int main()
 {
 	printf("   ###\t欢迎使用广西民族大学软件与信息安全学院职工工资管理系统\t###\n\n\n");
-	printf("=========================================================================\n|\t1.查询职工工资记录\t\t\t\t\t\t|\n|\t2.修改职工工资记录\t\t\t\t\t\t|\n|\t3.添加职工工资记录\t\t\t\t\t\t|\n|\t4.删除职工工资记录\t\t\t\t\t\t|\n|\t5.保存数据到文件\t\t\t\t\t\t|\n|\t6.浏览职工记录\t\t\t\t\t\t\t|\n|\t7.退出系统\t\t\t\t\t\t\t|\n|\t8.弹出菜单\t\t\t\t\t\t\t|\n=========================================================================\n");
 	printf("\n");
 	int num;
 	read();
 	for(;true;)//无限循环体（以条件来结束循环）
-	{	
+	{
+		printf("=========================================================================\n|\t1.查询职工工资记录\t\t\t\t\t\t|\n|\t2.修改职工工资记录\t\t\t\t\t\t|\n|\t3.添加职工工资记录\t\t\t\t\t\t|\n|\t4.删除职工工资记录\t\t\t\t\t\t|\n|\t5.保存数据到文件\t\t\t\t\t\t|\n|\t6.浏览职工记录\t\t\t\t\t\t\t|\n|\t7.退出系统\t\t\t\t\t\t\t|\n|\t8.弹出菜单\t\t\t\t\t\t\t|\n=========================================================================\n");
 		scanf("%d",&num);
+		printf("你输入的是%d\n",num);
 	    switch(num)
 		{
 		case 1: find();
@@ -271,10 +300,10 @@ int main()
 		case 7:printf("退出系统!任意键结束.....\n");
 			break;
 		case 8:printf("=========================================================================\n|\t1.查询职工工资记录\t\t\t\t\t\t|\n|\t2.修改职工工资记录\t\t\t\t\t\t|\n|\t3.添加职工工资记录\t\t\t\t\t\t|\n|\t4.删除职工工资记录\t\t\t\t\t\t|\n|\t5.保存数据到文件\t\t\t\t\t\t|\n|\t6.浏览职工记录\t\t\t\t\t\t\t|\n|\t7.退出系统\t\t\t\t\t\t\t|\n|\t8.弹出菜单\t\t\t\t\t\t\t|\n=========================================================================\n");
-
 			break;
 	    default:			
 			printf("请输入1~8的数字,其他为无效操作\n");
+			break;
 		}
 		if(num==7)
 			break;	
