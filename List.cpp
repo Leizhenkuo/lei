@@ -184,7 +184,7 @@ void list()
 				system("cls");
 				break;
 			case 0:
-				printf("退出浏览...");
+				printf("退出浏览...\n");
 				break;
 			default:			
 				printf("请输入提示数字,其他为无效操作\n");
